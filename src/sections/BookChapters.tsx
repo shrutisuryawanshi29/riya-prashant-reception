@@ -1,7 +1,6 @@
 import { wedding as w } from '../receptionData';
 import { moments } from '../data/moments';
 import { WeddingCountdown } from '../components/WeddingCountdown';
-import { CalendarControls, ShareInvitation } from '../components/GuestControls';
 import { ScheduleBlock } from '../components/ScheduleBlock';
 
 function ChapterHeading({ number, title, subtitle }: {number:string; title:string; subtitle?:string}) {
@@ -35,25 +34,6 @@ export function ReceptionInvitationChapter() {
 }
 export function InvitationChapter() {
  return <article className="book-new-chapter book-invitation"><ChapterHeading number="Chapter three" title="Until We Celebrate" subtitle="A moment we have been waiting for"/><WeddingCountdown/><ScheduleBlock date="Sunday, 6 December 2026" time="6:00 PM" timeNote="Onwards · IST" extra="Followed by dinner"/><p>With the love and blessings of our families, we joyfully invite you to celebrate our wedding reception.</p><img className="book-invitation-logo" src="/images/wedding-logo-blended.webp" alt="Prashant and Riya wedding logo" width="768" height="768" loading="lazy" decoding="async"/></article>;
-}
-
-/** Decorative slot for a future approved, atmospheric illustration. */
-function VenueArtworkSlot({src}: {src?:string}) {
- return <div className="venue-art-slot" aria-hidden="true">{src && <img src={src} alt="" loading="lazy" decoding="async"/>}</div>;
-}
-
-export function VenuesChapter() {
- const v=w.venues[0];
- return <article className="book-new-chapter book-venues book-venue-page book-venue-thane">
-  <ChapterHeading number="The Reception" title="An Evening to Celebrate"/>
-  <section className="book-venue">
-   <h3>{v.name}</h3><p className="venue-city">Mira Road East, Thane</p>
-   <ScheduleBlock date="Sunday, 6 December 2026" time="6:00 PM" timeNote="Onwards · IST" extra="Followed by dinner"/>
-   <VenueArtworkSlot src="/images/venue-thane-watercolor.webp"/>
-   <address data-scroll-detail>{v.lines.map(line=><span key={line}>{line}<br/></span>)}</address>
-   <div className="venue-actions"><a className="book-direction" href={'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(v.query)} target="_blank" rel="noreferrer">Get directions ↗</a><CalendarControls index={0}/></div>
-  </section><ShareInvitation/>
- </article>;
 }
 
 export function EpilogueChapter() {

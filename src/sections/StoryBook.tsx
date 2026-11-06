@@ -5,12 +5,17 @@ import { wedding } from '../receptionData';
 import { BookPageFrame } from '../components/BookPageFrame';
 import { BookScrollRegion } from '../components/BookScrollRegion';
 import { CelebrationPage } from './CelebrationPage';
-import { MomentsChapter, InvitationChapter, ReceptionInvitationChapter, VenuesChapter, EpilogueChapter } from './BookChapters';
+import { MomentsChapter, InvitationChapter, ReceptionInvitationChapter, EpilogueChapter } from './BookChapters';
 
-type Page = 'cover' | 'moments' | 'invitation' | 'countdown' | 'reception' | 'venue-reception' | 'epilogue';
-const pages: Page[] = ['cover', 'moments', 'invitation', 'countdown', 'reception', 'venue-reception', 'epilogue'];
-const labels = ['Cover', 'Our Moments', 'Our Invitation', 'Until We Celebrate', 'Our Reception', 'Join Us · Thane', 'Our Story, Our Forever'];
-function pageFromHash(): Page { const key = window.location.hash.slice(1); return pages.includes(key as Page) ? key as Page : ['mehendi','engagement','haldi','wedding','celebrations'].includes(key) ? 'reception' : key === 'venues' ? 'venue-reception' : ['little','places','story','chapter'].includes(key) ? 'epilogue' : 'cover'; }
+type Page = 'cover' | 'moments' | 'invitation' | 'countdown' | 'reception' | 'epilogue';
+const pages: Page[] = ['cover', 'moments', 'invitation', 'countdown', 'reception', 'epilogue'];
+const labels = ['Cover', 'Our Moments', 'Our Invitation', 'Until We Celebrate', 'Our Reception', 'Our Story, Our Forever'];
+function pageFromHash(): Page {
+  const key = window.location.hash.slice(1);
+  if (pages.includes(key as Page)) return key as Page;
+  if (['mehendi', 'engagement', 'haldi', 'wedding', 'celebrations', 'venue-reception', 'venues'].includes(key)) return 'reception';
+  return ['little', 'places', 'story', 'chapter'].includes(key) ? 'epilogue' : 'cover';
+}
 
 function BookCover({ open }: { open: () => void }) {
   return <div className="book-cover-content">
@@ -180,7 +185,6 @@ export function StoryBook() {
     case 'invitation': return <ReceptionInvitationChapter/>;
     case 'countdown': return <InvitationChapter/>;
     case 'reception': return <CelebrationPage id={which}/>;
-    case 'venue-reception': return <VenuesChapter/>;
     case 'epilogue': return <EpilogueChapter/>;
   }}
   // Keep the chapter React elements stable while the renderer animates cloned paper.
@@ -197,7 +201,7 @@ export function StoryBook() {
     </div>
     {sheets.map((sheet,i)=>createPortal(<div className={"book-sheet-content"+(i===0?" book-sheet-cover":"")}>
       <BookPageFrame/>
-      <BookScrollRegion cover={i===0} active={page===pages[i] && !turning} venueCue={['reception','venue-reception'].includes(pages[i])} hintSeen={scrollHintSeen} onFirstScroll={dismissScrollHint}>{chapterContent[i]}</BookScrollRegion>
+      <BookScrollRegion cover={i===0} active={page===pages[i] && !turning} venueCue={pages[i] === 'reception'} hintSeen={scrollHintSeen} onFirstScroll={dismissScrollHint}>{chapterContent[i]}</BookScrollRegion>
       {i>0 && <div className="book-controls"><button aria-label="Previous page" onClick={()=>turn(pages[i-1])}>←</button><span className="book-page-number"><small>{pages[i]==='epilogue'?'Epilogue':`Chapter ${i} of ${pages.length - 2}`}</small>{String(i+1).padStart(2,'0')} / {pages.length}</span><button aria-label="Next page" disabled={i===pages.length-1} onClick={()=>turn(pages[i+1])}>→</button></div>}
     </div>,sheet,pages[i]))}
     <p className="book-status" aria-live="polite">{labels[pages.indexOf(page)]} · {pages.indexOf(page)+1} of {pages.length}</p>
