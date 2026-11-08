@@ -941,3 +941,7 @@ html.storybook-document, html.storybook-document body, html.storybook-document #
 .reception-venue .calendar-control { margin:0; color:#56182c; }
 .reception-venue .calendar-control summary { min-height:44px; display:inline-flex; align-items:center; justify-content:center; }
 .reception-venue .calendar-options { color:#56182c; }
+
+/* Book-relative decorative particle canvas. */
+.stardust-layer { position:absolute; inset:0; width:100%; height:100%; z-index:100; pointer-events:none; }
+@media (prefers-reduced-motion:reduce) { .stardust-layer { display:none; } }
